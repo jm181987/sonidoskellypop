@@ -3,153 +3,525 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reproductor de Audios Para Kellypop</title>
+  <title>Kellypop Audio Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --primary: #FF2D9E;
+      --secondary: #00D1FF;
+      --accent: #FFEE00;
+      --dark: #1A1A2E;
+      --light: #F8F9FA;
+      --success: #00E676;
+    }
+
     /* Estilo general */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #ffe0f0, #e0f7ff);
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--dark);
+      color: var(--light);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
     .container {
-      max-width: 800px;
-      margin: 60px auto;
-      background-color: #ffffffcc;
+      max-width: 1000px;
+      margin: 40px auto;
       padding: 30px;
+      background: rgba(26, 26, 46, 0.8);
       border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
     }
 
     h1 {
-      text-align: center;
-      color: #ff2fa0;
-      font-size: 2.5em;
-      margin-bottom: 30px;
-      text-shadow: 1px 1px #fff;
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
     }
 
     #controls-container {
-      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
       padding: 20px;
-    }
-
-    label {
-      margin: 0 10px;
-      color: #555;
-      font-weight: bold;
-    }
-
-    input[type="range"] {
-      accent-color: #ff2fa0;
-      margin: 0 10px;
-    }
-
-    #buttons-container {
+      border-radius: 15px;
+      margin-bottom: 30px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
+      gap: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-group label {
+      color: var(--light);
+      font-weight: 500;
+      min-width: 80px;
+      text-align: right;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-group label i {
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    input[type="range"] {
+      width: 180px;
+      height: 8px;
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 45, 158, 0.5);
+      transition: all 0.3s;
+    }
+
+    input[type="range"]:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 45, 158, 0.8);
+    }
+
+    #volume-value, #pitch-value {
+      min-width: 40px;
+      text-align: center;
+      font-weight: bold;
+      color: var(--accent);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    #buttons-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
     }
 
     .audio-button {
-      margin: 10px;
-      padding: 15px 25px;
-      font-size: 16px;
-      background: linear-gradient(135deg, #ff5fc0, #ff2fa0);
+      position: relative;
+      padding: 15px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, rgba(255, 45, 158, 0.8), rgba(0, 209, 255, 0.8));
       color: white;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-      animation: pop-in 0.3s ease;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 60px;
+    }
+
+    .audio-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
     .audio-button:hover {
-      box-shadow: 0 8px 18px rgba(255, 47, 160, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 45, 158, 0.4);
+    }
+
+    .audio-button:hover::before {
+      opacity: 1;
     }
 
     .audio-button:active {
-      transform: scale(0.92);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transform: translateY(1px);
+    }
+
+    .audio-button i {
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+
+    .playing {
+      animation: pulse 1.5s infinite;
+      position: relative;
+    }
+
+    .playing::after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border: 2px solid var(--accent);
+      border-radius: 15px;
+      animation: borderPulse 1.5s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 45, 158, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 45, 158, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 45, 158, 0); }
+    }
+
+    @keyframes borderPulse {
+      0% { opacity: 1; transform: scale(1); }
+      70% { opacity: 0; transform: scale(1.05); }
+      100% { opacity: 0; transform: scale(1.1); }
     }
 
     footer {
       text-align: center;
-      padding: 20px;
-      color: #777;
-      font-size: 14px;
+      padding: 30px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin-top: 40px;
     }
 
     footer a {
-      color: #ff2fa0;
+      color: var(--secondary);
       text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
     }
 
-    @keyframes pop-in {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+    footer a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .status-bar {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .now-playing i {
+      color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      #buttons-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      
+      .control-group {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+      }
+      
+      .control-group label {
+        text-align: left;
+      }
+    }
+
+    /* Efectos especiales */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 45, 158, 0.5);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
     }
   </style>
 </head>
 
 <body>
-
-  <div id="controls-container">
-    <label for="volume">Volumen:</label>
-    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="changeVolume(this.value)">
-    
-    <label for="pitch">Pitch:</label>
-    <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1" onchange="changePitch(this.value)">
-  </div>
+  <div class="particles" id="particles"></div>
 
   <div class="container">
-    <h1>Panel de Audios para KELLYPOP</h1>
+    <header>
+      <h1>KELLYPOP AUDIO PANEL</h1>
+      <p class="subtitle">Controla los efectos de sonido para tu transmisión</p>
+    </header>
+
+    <div id="controls-container">
+      <div class="control-group">
+        <label for="volume"><i class="fas fa-volume-up"></i> Volumen</label>
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.7" oninput="changeVolume(this.value)">
+        <span id="volume-value">70%</span>
+      </div>
+
+      <div class="control-group">
+        <label for="pitch"><i class="fas fa-sliders-h"></i> Velocidad</label>
+        <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1" oninput="changePitch(this.value)">
+        <span id="pitch-value">1.0x</span>
+      </div>
+    </div>
+
     <div id="buttons-container">
-      <button class="audio-button" onclick="playAudio('aplausos.mp3')">Aplausos</button>
-      <button class="audio-button" onclick="playAudio('burra moria.mp3')">Burra Moria</button>
-      <button class="audio-button" onclick="playAudio('chisme me encanta.mp3')">Chisme me encanta</button>
-      <button class="audio-button" onclick="playAudio('como mi amor.mp3')">Como mi amor</button>
-      <button class="audio-button" onclick="playAudio('corte corte.mp3')">Corte corte</button>
-      <button class="audio-button" onclick="playAudio('el decorado se calla.mp3')">Decorado se calla</button>
-      <button class="audio-button" onclick="playAudio('feliz cumple.mp3')">Feliz Cumple</button>
-      <button class="audio-button" onclick="playAudio('guaranga patotea.mp3')">Guaranga Patotea</button>
-      <button class="audio-button" onclick="playAudio('loca no asumida.mp3')">Loca no asumida</button>
-      <button class="audio-button" onclick="playAudio('mas mala q araña.mp3')">+ Mala q araña</button>
-      <button class="audio-button" onclick="playAudio('Pelotudo.mp3')">Pelotudo</button>
-      <button class="audio-button" onclick="playAudio('quienes son.mp3')">QUIÉNES SON</button>
-      <button class="audio-button" onclick="playAudio('buzina.mp3')">Buzina</button>    
+      <button class="audio-button" onclick="playAudio('aplausos.mp3', this)">
+        <i class="fas fa-hands-clapping"></i> Aplausos
+      </button>
+      <button class="audio-button" onclick="playAudio('burra moria.mp3', this)">
+        <i class="fas fa-horse-head"></i> Burra Moria
+      </button>
+      <button class="audio-button" onclick="playAudio('chisme me encanta.mp3', this)">
+        <i class="fas fa-gossip"></i> Chisme me encanta
+      </button>
+      <button class="audio-button" onclick="playAudio('como mi amor.mp3', this)">
+        <i class="fas fa-heart"></i> Como mi amor
+      </button>
+      <button class="audio-button" onclick="playAudio('corte corte.mp3', this)">
+        <i class="fas fa-cut"></i> Corte corte
+      </button>
+      <button class="audio-button" onclick="playAudio('el decorado se calla.mp3', this)">
+        <i class="fas fa-volume-mute"></i> Decorado se calla
+      </button>
+      <button class="audio-button" onclick="playAudio('feliz cumple.mp3', this)">
+        <i class="fas fa-birthday-cake"></i> Feliz Cumple
+      </button>
+      <button class="audio-button" onclick="playAudio('guaranga patotea.mp3', this)">
+        <i class="fas fa-fist-raised"></i> Guaranga Patotea
+      </button>
+      <button class="audio-button" onclick="playAudio('loca no asumida.mp3', this)">
+        <i class="fas fa-user-alt"></i> Loca no asumida
+      </button>
+      <button class="audio-button" onclick="playAudio('mas mala q araña.mp3', this)">
+        <i class="fas fa-spider"></i> + Mala q araña
+      </button>
+      <button class="audio-button" onclick="playAudio('Pelotudo.mp3', this)">
+        <i class="fas fa-head-side-virus"></i> Pelotudo
+      </button>
+      <button class="audio-button" onclick="playAudio('quienes son.mp3', this)">
+        <i class="fas fa-question"></i> QUIÉNES SON
+      </button>
+      <button class="audio-button" onclick="playAudio('buzina.mp3', this)">
+        <i class="fas fa-car-burst"></i> Buzina
+      </button>
+    </div>
+
+    <div class="status-bar">
+      <div class="now-playing">
+        <i class="fas fa-music"></i>
+        <span id="current-track">Selecciona un audio...</span>
+      </div>
+      <div id="audio-time">00:00</div>
     </div>
   </div>
 
-  <script>
-    function playAudio(audioSrc) {
-      const audio = new Audio();
-      audio.src = audioSrc;
-      audio.volume = document.getElementById('volume').value;
-      audio.playbackRate = document.getElementById('pitch').value;
-      audio.play();
-    }
-
-    function changeVolume(value) {
-      const audios = document.getElementsByTagName('audio');
-      for (let i = 0; i < audios.length; i++) {
-        audios[i].volume = value;
-      }
-    }
-
-    function changePitch(value) {
-      const audios = document.getElementsByTagName('audio');
-      for (let i = 0; i < audios.length; i++) {
-        audios[i].playbackRate = value;
-      }
-    }
-  </script>
-
   <footer>
-    Desenvolvido por <a href="https://wa.me/59893867429">Jorge Marquez</a>
+    Desarrollado por <a href="https://wa.me/59893867429" target="_blank">Jorge Marquez</a> | © 2023 Kellypop Audio Panel
   </footer>
 
+  <script>
+    // Variables globales
+    let currentAudio = null;
+    let currentButton = null;
+    
+    // Crear partículas de fondo
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Posición aleatoria
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = `${Math.random() * 100}vh`;
+        
+        // Tamaño aleatorio
+        const size = Math.random() * 5 + 3;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Opacidad aleatoria
+        particle.style.opacity = Math.random() * 0.5 + 0.1;
+        
+        // Retraso de animación aleatorio
+        particle.style.animationDelay = `${Math.random() * 15}s`;
+        
+        // Duración de animación aleatoria
+        particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // Reproducir audio
+    function playAudio(audioSrc, button) {
+      // Detener el audio actual si hay uno reproduciéndose
+      if (currentAudio) {
+        currentAudio.pause();
+        if (currentButton) {
+          currentButton.classList.remove('playing');
+        }
+      }
+      
+      // Crear nuevo audio
+      currentAudio = new Audio(audioSrc);
+      currentAudio.volume = document.getElementById('volume').value;
+      currentAudio.playbackRate = document.getElementById('pitch').value;
+      
+      // Actualizar UI
+      document.getElementById('current-track').textContent = audioSrc.replace('.mp3', '');
+      if (button) {
+        button.classList.add('playing');
+        currentButton = button;
+      }
+      
+      // Evento cuando termina la reproducción
+      currentAudio.addEventListener('ended', () => {
+        if (button) {
+          button.classList.remove('playing');
+        }
+        document.getElementById('current-track').textContent = 'Selecciona un audio...';
+        document.getElementById('audio-time').textContent = '00:00';
+      });
+      
+      // Actualizar tiempo de reproducción
+      currentAudio.addEventListener('timeupdate', () => {
+        const minutes = Math.floor(currentAudio.currentTime / 60);
+        const seconds = Math.floor(currentAudio.currentTime % 60);
+        document.getElementById('audio-time').textContent = 
+          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      });
+      
+      // Reproducir
+      currentAudio.play().catch(e => console.error("Error al reproducir audio:", e));
+    }
+    
+    // Cambiar volumen
+    function changeVolume(value) {
+      if (currentAudio) {
+        currentAudio.volume = value;
+      }
+      document.getElementById('volume-value').textContent = `${Math.round(value * 100)}%`;
+    }
+    
+    // Cambiar pitch/velocidad
+    function changePitch(value) {
+      if (currentAudio) {
+        currentAudio.playbackRate = value;
+      }
+      document.getElementById('pitch-value').textContent = `${value.toFixed(1)}x`;
+    }
+    
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      
+      // Asignar eventos para teclas rápidas (opcional)
+      document.addEventListener('keydown', (e) => {
+        // Ejemplo: tecla 1 para el primer botón
+        if (e.key === '1') {
+          document.querySelector('.audio-button').click();
+        }
+        // Puedes agregar más teclas rápidas aquí
+      });
+    });
+  </script>
 </body>
 </html>
