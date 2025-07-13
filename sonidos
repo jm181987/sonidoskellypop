@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reproductor de Audios - Jorge</title>
+  <link rel= stylesheet" href="styles.css">
+</head>
+<style>
+/* Estilos CSS */
+/* Estilos CSS */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f3f3;
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+#buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.audio-button {
+  margin: 10px;
+  padding: 15px 30px;
+  font-size: 16px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); /* Agrega una sombra para un efecto tridimensional */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease; /* Agrega transición al color de fondo y transformación */
+}
+
+.audio-button:hover {
+  background-color: #555;
+}
+
+.audio-button:active {
+  transform: translateY(2px); /* Desplaza ligeramente el botón hacia abajo al hacer clic */
+  box-shadow: none; /* Quita la sombra al hacer clic */
+}
+
+
+  </style>
+
+<body>
+
+    <div id="controls-container">
+        <label for="volume">Volumen:</label>
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="changeVolume(this.value)">
+  
+        <label for="pitch">Pitch:</label>
+        <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1" onchange="changePitch(this.value)">
+      </div>
+
+  <div class="container">
+    <h1>Reproductor de Audios by Jorge</h1>
+    <div id="buttons-container">
+      <!-- Botones para reproducir los audios -->
+      <button class="audio-button" onclick="playAudio('ratinho.mp3')">Ratinho</button>
+      <button class="audio-button" onclick="playAudio('rapaz.mp3')">Rapaz</button>
+      <button class="audio-button" onclick="playAudio('dançagatinho.mp3')">Dança gatinho</button>
+      <button class="audio-button" onclick="playAudio('uepaaa.mp3')">ueeepaa</button>
+      <button class="audio-button" onclick="playAudio('que isso meu filho.mp3')">Que isso meu filho, Calma</button>
+      <button class="audio-button" onclick="playAudio('ihaaaaaaaaa.mp3')">ihaaaaaaaaa</button>
+      <button class="audio-button" onclick="playAudio('esse e meu patrao.mp3')">esse e meu patrao</button>
+      <button class="audio-button" onclick="playAudio('money.mp3')">money</button>
+      <button class="audio-button" onclick="playAudio('pai para.mp3')">Ay pai para</button>
+      <button class="audio-button" onclick="playAudio('cavalo.mp3')">cavalo</button>
+      <button class="audio-button" onclick="playAudio('ta pegando fogo.mp3')">ta pegando fogo</button>
+      <button class="audio-button" onclick="playAudio('sialdebaran.mp3')">Suiii</button>
+      <button class="audio-button" onclick="playAudio('sape.mp3')">Sape</button>
+      <button class="audio-button" onclick="playAudio('errou.mp3')">Errou</button>
+      <button class="audio-button" onclick="playAudio('faustao fogo.mp3')">Pegando Fogo Faustao</button>
+      <button class="audio-button" onclick="playAudio('OLOOOCO.mp3')">O Loco ALDEB</button>
+      <button class="audio-button" onclick="playAudio('eu-vou-tomar-um-tacaca.mp3')">Tacaca</button>
+      <button class="audio-button" onclick="playAudio('ninguem em ligaçao.mp3')">Ninguem em</button>
+      <button class="audio-button" onclick="playAudio('pai solteiro.mp3')">pai solteiro</button>
+      <button class="audio-button" onclick="playAudio('mamadera.mp3')">Mamadera</button>
+      <button class="audio-button" onclick="playAudio('ESO PERRO.mp3')">eSO pERRO</button>
+      <button class="audio-button" onclick="playAudio('todo mundo de pe.mp3')">td mundo de pe</button>
+      <button class="audio-button" onclick="playAudio('gerencia daniel.mp3')">gerencia daniel</button>
+      <button class="audio-button" onclick="playAudio('gerencia igor.mp3')">gerencia igor</button>
+      <button class="audio-button" onclick="playAudio('twistar riv uy.mp3')">twistar</button>
+      <button class="audio-button" onclick="playAudio('o iluminado.mp3')">O iluminado</button>
+      <button class="audio-button" onclick="playAudio('benzemaaa.mp3')">benzemaaa</button>
+      <button class="audio-button" onclick="playAudio('dmode.mp3')">Dmode</button>
+      <button class="audio-button" onclick="playAudio('du neida.mp3')">du neida</button>
+      <button class="audio-button" onclick="playAudio('asmei.mp3')">asmei</button>
+      <button class="audio-button" onclick="playAudio('desafio.mp3')">Desafio</button>
+      <button class="audio-button" onclick="playAudio('chamba.mp3')">chamba</button>
+      <button class="audio-button" onclick="playAudio('tiro.mp3')">tiro</button>
+      <button class="audio-button" onclick="playAudio('tiro foi ese.mp3')">q tiro foi ese</button>
+      <button class="audio-button" onclick="playAudio('me siento mal AM.mp3')">me siento mal AM</button>
+      <button class="audio-button" onclick="playAudio('me siento mal jaja.mp3')">Me siento mal jaja</button>
+      <button class="audio-button" onclick="playAudio('petrovski.mp3')">Petrovski</button>
+      <button class="audio-button" onclick="playAudio('buzina.mp3')">buzinai</button>    
+      <button class="audio-button" onclick="playAudio('IGORRRRRRR.mp3')">Igor</button>
+
+      <button class="audio-button" onclick="playAudio('machuquei.mp3')">Machuquei</button>
+
+
+    </div>
+  </div>
+
+  <script> function playAudio(audioSrc) {
+    var audio = new Audio();
+    audio.src = audioSrc;
+    audio.play();}
+
+      // Función para reproducir el audio con el volumen y el pitch actual
+      function playAudio(audioSrc) {
+      var audio = new Audio();
+      audio.src = audioSrc;
+      audio.volume = document.getElementById('volume').value; // Establece el volumen
+      audio.playbackRate = document.getElementById('pitch').value; // Establece el pitch
+      audio.play();
+    }
+
+    // Función para cambiar el volumen
+    function changeVolume(value) {
+      var audioElements = document.getElementsByTagName('audio');
+      for (var i = 0; i < audioElements.length; i++) {
+        audioElements[i].volume = value;
+      }
+    }
+
+    // Función para cambiar el pitch
+    function changePitch(value) {
+      var audioElements = document.getElementsByTagName('audio');
+      for (var i = 0; i < audioElements.length; i++) {
+        audioElements[i].playbackRate = value;
+      }
+    }
+
+    </script>
+</body>
+<footer>
+    Desenvolvido por <a href="https://wa.me/59893867429">Jorge Marquez</a>
+</footer>
+</html>
